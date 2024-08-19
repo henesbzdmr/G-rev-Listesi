@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="main.css">
+    <title>Görev Listesi</title>
+</head>
+<body>
+
+<div class="task-list">
+    <h1>Görev Listesi</h1>
+    <div id="tasks">
+        <!-- Görevler buraya eklenecek -->
+    </div>
+    <div class="task-counter" id="taskCounter">Toplam 0 adet göreviniz var</div>
+    <button class="add-button" onclick="addTask()">+</button>
+    <button class="clear-button hidden" id="clearButton" onclick="clearAll()">Hepsini Sil</button>
+</div>
+
+<script>
+    function addTask() {
+        var taskText = prompt("Yeni görevi girin:");
+        if (taskText) {
+            var taskContainer = document.getElementById('tasks');
+            var taskElement = document.createElement('div');
+            taskElement.className = 'task';
+            taskElement.innerHTML = `
+                <span onclick="toggleComplete(this)">${taskText}</span>
+                <button class="delete-button" onclick="deleteTask(this)">🗑</button>
+                <button class="complete-button hidden""delete-button" onclick="deleteTask(this)">✔ 🗑</button>
+            `;
+            taskContainer.appendChild(taskElement);
+            updateCounter();
+        }
+    }
+
+    function toggleComplete(spanElement) {
+        var taskElement = spanElement.parentElement;
+        var deleteButton = taskElement.querySelector('.delete-button');
+        var completeButton = taskElement.querySelector('.complete-button');
+        spanElement.classList.toggle('completed');
+        if (spanElement.classList.contains('completed')) {
+            deleteButton.classList.add('hidden');
+            completeButton.classList.remove('hidden');
+        } else {
+            deleteButton.classList.remove('hidden');
+            completeButton.classList.add('hidden');
+        }
+    }
+
+    function deleteTask(button) {
+        var taskElement = button.parentElement;
+        taskElement.remove();
+        updateCounter();
+    }
+
+    function clearAll() {
+        var taskContainer = document.getElementById('tasks');
+        taskContainer.innerHTML = '';
+        updateCounter();
+    }
+
+    function updateCounter() {
+        var taskCount = document.getElementById('tasks').children.length;
+        document.getElementById('taskCounter').innerText = `Toplam ${taskCount} adet göreviniz var`;
+        toggleClearButton(taskCount);
+    }
+
+    function toggleClearButton(taskCount) {
+        var clearButton = document.getElementById('clearButton');
+        if (taskCount >= 1) {
+            clearButton.classList.remove('hidden');
+        } else {
+            clearButton.classList.add('hidden');
+        }
+    }
+
+    updateCounter(); // Sayfa yüklendiğinde görev sayacını güncelle
+</script>
+</body>
+</html>
